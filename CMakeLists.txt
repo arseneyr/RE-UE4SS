@@ -180,6 +180,22 @@ foreach (target_type ${TARGET_TYPES})
 endforeach ()
 # Build configurations -> END
 
+# Default configuration -> START
+get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+
+if (is_multi_config)
+    set(CMAKE_CONFIGURATION_TYPES ${BUILD_CONFIGS} CACHE STRING "" FORCE)
+else ()
+    if (NOT CMAKE_BUILD_TYPE)
+        message("Defaulting to Game__Shipping__Win64")
+        set(CMAKE_BUILD_TYPE Game__Shipping__Win64 CACHE STRING "" FORCE)
+    endif ()
+
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY HELPSTRING "Choose build type")
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${BUILD_CONFIGS})
+endif ()
+# Default configuration -> END
+
 add_subdirectory("deps")
 
 foreach (project ${PROJECTS})
@@ -230,18 +246,3 @@ foreach (target ${TARGETS})
     endforeach ()
 endforeach ()
 
-# Default configuration -> START
-get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
-
-if (is_multi_config)
-    set(CMAKE_CONFIGURATION_TYPES ${BUILD_CONFIGS} CACHE STRING "" FORCE)
-else ()
-    if (NOT CMAKE_BUILD_TYPE)
-        message("Defaulting to Game__Shipping__Win64")
-        set(CMAKE_BUILD_TYPE Game__Shipping__Win64 CACHE STRING "" FORCE)
-    endif ()
-
-    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY HELPSTRING "Choose build type")
-    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${BUILD_CONFIGS})
-endif ()
-# Default configuration -> END
